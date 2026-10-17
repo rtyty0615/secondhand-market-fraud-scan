@@ -286,7 +286,7 @@ function Index() {
           <div className="mt-6 rounded-xl border bg-card p-6 text-center">
             {highRiskReasons.length > 0 ? (
               <div role="alert" className="space-y-4">
-                <h2 className="text-3xl font-bold text-destructive">High risk 高風險</h2>
+                <h2 className="text-3xl font-bold text-destructive">Stop transaction 暫停交易</h2>
                 <p className="text-sm text-foreground">
                   A critical warning sign overrides the score. Pause this transaction; do not follow links, operate banking services, or share private information.
                   <span className="mt-2 block">已觸發一票否決，無論累加分數多少都屬高風險。請暫停交易，勿點擊連結、操作網銀或 ATM，或提供私人資訊。</span>

@@ -11,13 +11,13 @@ const sellerBase = {
 };
 
 describe("shouldRecommendAdvice", () => {
-  it("requires the user's age to be strictly greater than 60", () => {
-    expect(shouldRecommendAdvice(60, 60)).toBe(false);
-    expect(shouldRecommendAdvice(61, 60)).toBe(true);
+  it("requires the user's age to be strictly greater than 70", () => {
+    expect(shouldRecommendAdvice(70, 60)).toBe(false);
+    expect(shouldRecommendAdvice(71, 60)).toBe(true);
   });
   it("requires the score to be strictly greater than 50", () => {
-    expect(shouldRecommendAdvice(61, 50)).toBe(false);
-    expect(shouldRecommendAdvice(61, 51)).toBe(true);
+    expect(shouldRecommendAdvice(71, 50)).toBe(false);
+    expect(shouldRecommendAdvice(71, 51)).toBe(true);
   });
   it("does not recommend age-based advice when age is unanswered", () => {
     expect(shouldRecommendAdvice(null, 80)).toBe(false);

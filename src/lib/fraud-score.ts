@@ -69,5 +69,5 @@ export function scoreTotal(p: ProfileAnswers, s: SellerAnswers): number {
 }
 
 export function shouldRecommendAdvice(age: number | null, score: number): boolean {
-  return age !== null && Number.isFinite(age) && age > 60 && score > 50;
+  return age !== null && Number.isFinite(age) && age > 70 && score > 50;
 }
