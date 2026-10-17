@@ -83,10 +83,7 @@ describe("scoreTotal", () => {
     expect(
       scoreTotal(
         { friendCount: 1, newAccount: true, fakeIdentity: true, emptyProfile: true },
-        {
-          cannotMeet: true,
-          bankAccount: true,
-        },
+        { ...sellerBase, cannotMeet: true, bankAccount: true },
       ),
     ).toBe(80));
 });
