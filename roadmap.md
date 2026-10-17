@@ -52,3 +52,8 @@
 
 - [x] Set the main title to "Can I Trust This Person? 這人可信嗎" and the subtitle to "Check if a Facebook Marketplace buyer might be a fake account. 二手交易詐騙檢測", English first.
 - [x] Verify both render in the page and the browser tab title matches.
+
+# Subtitle second line
+
+- [x] Put 二手交易詐騙檢測 on its own second line under the English subtitle.
+- [x] Verify the subtitle renders as two lines in the preview.
