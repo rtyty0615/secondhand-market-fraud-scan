@@ -143,6 +143,9 @@ function Index() {
     setSelectedAdvice([]);
   };
 
+  const adviceByKey = new Map(selectedAdvice.map((a) => [a.key, a]));
+  const showAdvice = result !== null;
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const score = scoreTotal(
@@ -203,44 +206,54 @@ function Index() {
             </h2>
             <p className="text-xs text-muted-foreground">每項 10%，最高 40%</p>
 
-            <label className="block">
-              <span className="text-sm font-medium text-foreground">
-                How many friends? 朋友人數
-              </span>
-              <input
-                type="number"
-                min={0}
-                value={friends}
-                onChange={(e) => { setFriends(e.target.value); clearResult(); }}
-                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground"
-                placeholder="e.g. 120"
-              />
-              <span className="mt-1 block text-xs text-muted-foreground">
-                Fewer than 10 counts 少於 10 位算一項
-              </span>
-            </label>
-
-            {profileQuestions.map((q) => (
-              <label key={q.key} className="flex items-start gap-3">
+            <div className="space-y-2">
+              <label className="block">
+                <span className="text-sm font-medium text-foreground">
+                  How many friends? 朋友人數
+                </span>
                 <input
-                  type="checkbox"
-                  checked={profileFlags[q.key]}
-                  onChange={(e) => {
-                    setProfileFlags({ ...profileFlags, [q.key]: e.target.checked });
-                    clearResult();
-                  }}
-                  className="mt-1 h-4 w-4 accent-primary"
+                  type="number"
+                  min={0}
+                  value={friends}
+                  onChange={(e) => { setFriends(e.target.value); clearResult(); }}
+                  className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground"
+                  placeholder="e.g. 120"
                 />
-                <span className="text-sm text-foreground">
-                  {q.label}
-                  <span className="block text-muted-foreground">{q.zh}</span>
-                  {q.hint && (
-                    <span className="mt-1 block text-xs italic text-muted-foreground">
-                      {q.hint}
-                    </span>
-                  )}
+                <span className="mt-1 block text-xs text-muted-foreground">
+                  Fewer than 10 counts 少於 10 位算一項
                 </span>
               </label>
+              {showAdvice && adviceByKey.get("fewFriends") && (
+                <QuestionAdviceCard advice={adviceByKey.get("fewFriends")!} />
+              )}
+            </div>
+
+            {profileQuestions.map((q) => (
+              <div key={q.key} className="space-y-2">
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={profileFlags[q.key]}
+                    onChange={(e) => {
+                      setProfileFlags({ ...profileFlags, [q.key]: e.target.checked });
+                      clearResult();
+                    }}
+                    className="mt-1 h-4 w-4 accent-primary"
+                  />
+                  <span className="text-sm text-foreground">
+                    {q.label}
+                    <span className="block text-muted-foreground">{q.zh}</span>
+                    {q.hint && (
+                      <span className="mt-1 block text-xs italic text-muted-foreground">
+                        {q.hint}
+                      </span>
+                    )}
+                  </span>
+                </label>
+                {showAdvice && adviceByKey.get(q.key) && (
+                  <QuestionAdviceCard advice={adviceByKey.get(q.key)!} />
+                )}
+              </div>
             ))}
           </section>
 
