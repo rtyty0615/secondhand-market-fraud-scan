@@ -45,7 +45,7 @@ export function QuestionAdviceCard({ advice }: { advice: QuestionAdvice }) {
         {advice.action.zh}
         <span className="mt-1 block text-xs text-muted-foreground">{advice.action.en}</span>
       </p>
-      <blockquote className="mt-3 border-l-2 border-border pl-3 text-sm leading-relaxed text-foreground">
+      <blockquote className="mt-2 border-l-2 border-border pl-3 text-sm leading-relaxed text-foreground">
         {advice.message.zh}
         <span className="mt-2 block text-muted-foreground">{advice.message.en}</span>
       </blockquote>
