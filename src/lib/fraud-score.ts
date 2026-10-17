@@ -113,8 +113,8 @@ export const RISK_LEVELS: Record<RiskLevel, { title: { en: string; zh: string };
   yellow: {
     title: { en: "Yellow light — Caution", zh: "黃燈 — 留意" },
     message: {
-      en: "A few caution signs. You may continue, but double-check the item and the person, and avoid risky payment steps.",
-      zh: "出現一些警訊。可以繼續交易，但請再次確認商品與對方身分，避免風險較高的付款方式。",
+      en: "A few caution signs appeared. If you choose to continue, please stay alert: double-check the item and the person, and avoid risky payment steps.",
+      zh: "出現一些警訊。若要繼續交易，請多留意：再次確認商品與對方身分，並避免風險較高的付款方式。",
     },
   },
   orange: {
