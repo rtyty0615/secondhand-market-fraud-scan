@@ -26,6 +26,18 @@ export const HIGH_RISK_REASONS = {
     en: "Asked to click a customer-service link",
     zh: "要求點擊客服連結",
   },
+  externalLink: {
+    en: "Asked you to go to an external link",
+    zh: "要求您點擊外部連結",
+  },
+  lineRedirect: {
+    en: "Asked you to add them on LINE or redirected you to other customer service",
+    zh: "要求您加 LINE 或轉接其他客服",
+  },
+  maiHuoBian: {
+    en: "Shared a 賣貨便 link with you",
+    zh: "向您分享賣貨便連結",
+  },
   accountPasswords: {
     en: "Asked for any account password",
     zh: "要求提供任何帳號密碼",
@@ -61,10 +73,7 @@ export function scoreProfile(a: ProfileAnswers): number {
 export function scoreSeller(a: SellerAnswers): number {
   const flags = [
     a.cannotMeet,
-    a.externalLink,
-    a.lineRedirect,
     a.bankAccount,
-    a.maiHuoBian,
   ];
   return Math.min(SELLER_MAX, flags.filter(Boolean).length * SELLER_POINTS_PER_FLAG);
 }
