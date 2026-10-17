@@ -23,15 +23,21 @@ const sellerBase = {
 
 describe("shouldRecommendAdvice", () => {
   it("requires the user's age to be strictly greater than 70", () => {
-    expect(shouldRecommendAdvice(70, 60)).toBe(false);
-    expect(shouldRecommendAdvice(71, 60)).toBe(true);
+    expect(shouldRecommendAdvice(70, 80)).toBe(false);
+    expect(shouldRecommendAdvice(71, 30)).toBe(true);
   });
-  it("requires the score to be strictly greater than 50", () => {
-    expect(shouldRecommendAdvice(71, 50)).toBe(false);
-    expect(shouldRecommendAdvice(71, 51)).toBe(true);
+  it("recommends advice from a score of exactly 30", () => {
+    expect(shouldRecommendAdvice(71, 29)).toBe(false);
+    expect(shouldRecommendAdvice(71, 30)).toBe(true);
+  });
+  it("recommends advice for any score when a critical warning sign is selected", () => {
+    expect(shouldRecommendAdvice(71, 0, true)).toBe(true);
+    expect(shouldRecommendAdvice(71, 0, false)).toBe(false);
+    expect(shouldRecommendAdvice(70, 0, true)).toBe(false);
   });
   it("does not recommend age-based advice when age is unanswered", () => {
     expect(shouldRecommendAdvice(null, 80)).toBe(false);
+    expect(shouldRecommendAdvice(null, 80, true)).toBe(false);
   });
 });
 

@@ -344,14 +344,6 @@ function Index() {
             className="h-auto min-h-9 w-full flex-col whitespace-normal px-4 py-3"
           >
             <span>Check 檢測</span>
-            {recommendAdvice && (
-              <span role="alert" className="mt-2 block text-sm font-medium leading-relaxed">
-                We strongly recommend pausing this transaction and seeking advice from a trusted family member, friend, or someone experienced with online transactions.
-                <span className="mt-1 block">
-                  強烈建議您先暫停交易，向信任的家人、朋友或熟悉網路交易的人諮詢，再決定是否繼續。
-                </span>
-              </span>
-            )}
           </Button>
         </form>
 
