@@ -15,5 +15,5 @@
 
 # Split the private-information veto
 
-- [ ] Replace the single "account passwords or unrelated private information" veto with two separate options: any account password, and any private ID document or personal information.
-- [ ] Test each new veto separately and verify both appear in the questionnaire.
+- [x] Replace the single "account passwords or unrelated private information" veto with two separate options: any account password, and any private ID document or personal information.
+- [x] Test each new veto separately and verify both appear in the questionnaire.
