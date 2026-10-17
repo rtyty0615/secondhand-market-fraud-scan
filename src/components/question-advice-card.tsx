@@ -41,9 +41,9 @@ export function QuestionAdviceCard({ advice }: { advice: QuestionAdvice }) {
 
   return (
     <article data-advice-key={advice.key} className="rounded-lg border border-border bg-muted/40 p-4">
-      <p className="text-sm text-foreground">
+      <p className="text-sm font-medium text-destructive">
         {advice.action.zh}
-        <span className="mt-1 block text-xs text-muted-foreground">{advice.action.en}</span>
+        <span className="mt-1 block text-xs text-destructive/80">{advice.action.en}</span>
       </p>
       <blockquote className="mt-2 border-l-2 border-border pl-3 text-sm leading-relaxed text-foreground">
         {advice.message.zh}
