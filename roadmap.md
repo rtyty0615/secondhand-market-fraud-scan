@@ -47,3 +47,8 @@
 
 - [x] Raise each seller choice from 20% to 30% and the section cap from 40% to 70%.
 - [x] Verify one choice shows 30%, three choices cap at 70%, and the section wording matches.
+
+# Page titles
+
+- [x] Set the main title to "Can I Trust This Person? 這人可信嗎" and the subtitle to "Check if a Facebook Marketplace buyer might be a fake account. 二手交易詐騙檢測", English first.
+- [x] Verify both render in the page and the browser tab title matches.
