@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { getHighRiskReasons, HIGH_RISK_REASONS, getRiskLevel, RISK_LEVELS, scoreTotal, shouldRecommendAdvice, type HighRiskKey, type RiskLevel } from "@/lib/fraud-score";
+import {
+  getHighRiskReasons,
+  HIGH_RISK_REASONS,
+  getRiskLevel,
+  MEETUP_ADVICE,
+  RISK_LEVELS,
+  scoreTotal,
+  shouldRecommendAdvice,
+  type HighRiskKey,
+  type RiskLevel,
+} from "@/lib/fraud-score";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -27,6 +37,7 @@ export const Route = createFileRoute("/")({
 type ProfileKey = "newAccount" | "fakeIdentity" | "emptyProfile";
 type SellerKey =
   | "cannotMeet"
+  | "privateLocationMeetup"
   | "externalLink"
   | "lineRedirect"
   | "bankAccount"
@@ -64,6 +75,11 @@ const sellerQuestions: { key: SellerKey; label: string; zh: string }[] = [
     zh: "無法面交，必須宅配",
   },
   {
+    key: "privateLocationMeetup",
+    label: "Proposes meeting at a private location",
+    zh: "提出在私人場合面交",
+  },
+  {
     key: "bankAccount",
     label: "Asks for your bank account",
     zh: "詢問你的銀行帳號",
@@ -94,6 +110,22 @@ const RISK_TEXT: Record<RiskLevel, string> = {
   red: "text-risk-red",
 };
 
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    document.body.removeChild(area);
+  }
+}
+
 function Index() {
   const [age, setAge] = useState("");
   const [friends, setFriends] = useState("");
@@ -104,6 +136,7 @@ function Index() {
   });
   const [sellerFlags, setSellerFlags] = useState<Record<SellerKey, boolean>>({
     cannotMeet: false,
+    privateLocationMeetup: false,
     externalLink: false,
     lineRedirect: false,
     bankAccount: false,
@@ -116,6 +149,7 @@ function Index() {
   const [result, setResult] = useState<number | null>(null);
   const [highRiskReasons, setHighRiskReasons] = useState<HighRiskKey[]>([]);
   const [recommendAdvice, setRecommendAdvice] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const clearResult = () => {
     setResult(null);
@@ -135,6 +169,12 @@ function Index() {
     setResult(score);
     setHighRiskReasons(getHighRiskReasons(sellerFlags));
     setRecommendAdvice(shouldRecommendAdvice(age === "" ? null : Number(age), score));
+  };
+
+  const copyMessage = async () => {
+    await copyToClipboard(MEETUP_ADVICE.message.zh);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -228,18 +268,44 @@ function Index() {
             </p>
 
             {sellerQuestions.map((q) => (
-              <label key={q.key} className="flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  checked={sellerFlags[q.key]}
-                  onChange={(e) => { setSellerFlags({ ...sellerFlags, [q.key]: e.target.checked }); clearResult(); }}
-                  className="mt-1 h-4 w-4 accent-primary"
-                />
-                <span className="text-sm text-foreground">
-                  {q.label}
-                  <span className="block text-muted-foreground">{q.zh}</span>
-                </span>
-              </label>
+              <div key={q.key} className="space-y-3">
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={sellerFlags[q.key]}
+                    onChange={(e) => { setSellerFlags({ ...sellerFlags, [q.key]: e.target.checked }); clearResult(); }}
+                    className="mt-1 h-4 w-4 accent-primary"
+                  />
+                  <span className="text-sm text-foreground">
+                    {q.label}
+                    <span className="block text-muted-foreground">{q.zh}</span>
+                  </span>
+                </label>
+
+                {q.key === "privateLocationMeetup" && sellerFlags[q.key] && (
+                  <div className="ml-7 rounded-lg border border-border bg-muted/40 p-3">
+                    <p className="text-xs text-muted-foreground">
+                      {MEETUP_ADVICE.lead.en}
+                      <span className="mt-1 block">{MEETUP_ADVICE.lead.zh}</span>
+                    </p>
+                    <p className="mt-2 rounded-md border border-input bg-background p-3 text-sm font-medium text-foreground">
+                      {MEETUP_ADVICE.message.zh}
+                      <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                        {MEETUP_ADVICE.message.en}
+                      </span>
+                    </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="mt-3"
+                      onClick={copyMessage}
+                    >
+                      {copied ? "Copied 已複製" : "Copy message 複製訊息"}
+                    </Button>
+                  </div>
+                )}
+              </div>
             ))}
           </section>
 

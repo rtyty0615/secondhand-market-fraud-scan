@@ -7,6 +7,7 @@ export type ProfileAnswers = {
 
 export type SellerAnswers = {
   cannotMeet: boolean;
+  privateLocationMeetup: boolean;
   externalLink: boolean;
   lineRedirect: boolean;
   bankAccount: boolean;
@@ -60,6 +61,17 @@ export const PROFILE_MAX = 40;
 export const SELLER_POINTS_PER_FLAG = 20;
 export const SELLER_MAX = 40;
 
+export const MEETUP_ADVICE = {
+  lead: {
+    en: "Ask to meet somewhere public instead. You can send this message:",
+    zh: "請改約在人多的公共場所面交，您可以把下面這句話傳給對方：",
+  },
+  message: {
+    en: "Sorry, I would prefer to meet at a busy public place, such as a convenience store or an MRT station.",
+    zh: "不好意思，我希望能夠到超商或捷運站等等人多的地方進行交易",
+  },
+} as const;
+
 export function scoreProfile(a: ProfileAnswers): number {
   const flags = [
     a.friendCount !== null && a.friendCount < 10,
@@ -71,10 +83,7 @@ export function scoreProfile(a: ProfileAnswers): number {
 }
 
 export function scoreSeller(a: SellerAnswers): number {
-  const flags = [
-    a.cannotMeet,
-    a.bankAccount,
-  ];
+  const flags = [a.cannotMeet, a.privateLocationMeetup, a.bankAccount];
   return Math.min(SELLER_MAX, flags.filter(Boolean).length * SELLER_POINTS_PER_FLAG);
 }
 
