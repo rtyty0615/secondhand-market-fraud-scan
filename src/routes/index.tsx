@@ -4,7 +4,6 @@ import {
   getHighRiskReasons,
   HIGH_RISK_REASONS,
   getRiskLevel,
-  MEETUP_ADVICE,
   RISK_LEVELS,
   scoreTotal,
   shouldRecommendAdvice,
@@ -12,6 +11,8 @@ import {
   type RiskLevel,
 } from "@/lib/fraud-score";
 import { Button } from "@/components/ui/button";
+import { QuestionAdviceCard } from "@/components/question-advice-card";
+import { getSelectedAdvice, type QuestionAdvice } from "@/lib/question-advice";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -110,22 +111,6 @@ const RISK_TEXT: Record<RiskLevel, string> = {
   red: "text-risk-red",
 };
 
-async function copyToClipboard(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.setAttribute("readonly", "");
-    area.style.position = "fixed";
-    area.style.opacity = "0";
-    document.body.appendChild(area);
-    area.select();
-    document.execCommand("copy");
-    document.body.removeChild(area);
-  }
-}
-
 function Index() {
   const [age, setAge] = useState("");
   const [friends, setFriends] = useState("");
@@ -149,12 +134,13 @@ function Index() {
   const [result, setResult] = useState<number | null>(null);
   const [highRiskReasons, setHighRiskReasons] = useState<HighRiskKey[]>([]);
   const [recommendAdvice, setRecommendAdvice] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [selectedAdvice, setSelectedAdvice] = useState<QuestionAdvice[]>([]);
 
   const clearResult = () => {
     setResult(null);
     setHighRiskReasons([]);
     setRecommendAdvice(false);
+    setSelectedAdvice([]);
   };
 
   const submit = (e: React.FormEvent) => {
@@ -167,17 +153,15 @@ function Index() {
         sellerFlags,
     );
     const reasons = getHighRiskReasons(sellerFlags);
+    setSelectedAdvice(getSelectedAdvice({
+      friendCount: friends === "" ? null : Number(friends),
+      ...profileFlags,
+    }, sellerFlags));
     setResult(score);
     setHighRiskReasons(reasons);
     setRecommendAdvice(
       shouldRecommendAdvice(age === "" ? null : Number(age), score, reasons.length > 0),
     );
-  };
-
-  const copyMessage = async () => {
-    await copyToClipboard(MEETUP_ADVICE.message.zh);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -285,29 +269,6 @@ function Index() {
                   </span>
                 </label>
 
-                {q.key === "privateLocationMeetup" && sellerFlags[q.key] && (
-                  <div className="ml-7 rounded-lg border border-border bg-muted/40 p-3">
-                    <p className="text-xs text-muted-foreground">
-                      {MEETUP_ADVICE.lead.en}
-                      <span className="mt-1 block">{MEETUP_ADVICE.lead.zh}</span>
-                    </p>
-                    <p className="mt-2 rounded-md border border-input bg-background p-3 text-sm font-medium text-foreground">
-                      {MEETUP_ADVICE.message.zh}
-                      <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                        {MEETUP_ADVICE.message.en}
-                      </span>
-                    </p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="mt-3"
-                      onClick={copyMessage}
-                    >
-                      {copied ? "Copied 已複製" : "Copy message 複製訊息"}
-                    </Button>
-                  </div>
-                )}
               </div>
             ))}
           </section>
@@ -397,6 +358,16 @@ function Index() {
               </>
             )}
           </div>
+        )}
+
+        {result !== null && selectedAdvice.length > 0 && (
+          <section aria-label="建議處理方式與回覆 / Suggested actions and replies" className="mt-6 space-y-4">
+            <h2 className="text-lg font-semibold text-foreground">
+              建議處理方式與回覆
+              <span className="block text-sm font-normal text-muted-foreground">Suggested actions and replies</span>
+            </h2>
+            {selectedAdvice.map((advice) => <QuestionAdviceCard key={advice.key} advice={advice} />)}
+          </section>
         )}
 
         {recommendAdvice && (
