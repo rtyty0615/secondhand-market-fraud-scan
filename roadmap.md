@@ -30,5 +30,5 @@
 
 # Advice for every selected item
 
-- [ ] Add bilingual handling advice and copyable replies for all profile, seller and critical-warning items after Check.
-- [ ] Verify complete coverage, selection changes, copying and unchanged scoring.
+- [x] Add bilingual handling advice and copyable replies for all profile, seller and critical-warning items after Check.
+- [x] Verify complete coverage, selection changes, copying and unchanged scoring (49 tests; all 14 cards and bilingual clipboard contents checked in the page).
