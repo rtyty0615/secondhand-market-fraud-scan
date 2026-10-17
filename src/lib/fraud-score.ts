@@ -11,7 +11,31 @@ export type SellerAnswers = {
   lineRedirect: boolean;
   bankAccount: boolean;
   maiHuoBian: boolean;
+  onlineBankingOrAtm?: boolean;
+  customerServiceLink?: boolean;
+  unrelatedPrivateInfo?: boolean;
 };
+
+export const HIGH_RISK_REASONS = {
+  onlineBankingOrAtm: {
+    en: "Asked to operate online banking or an ATM",
+    zh: "要求操作網銀或 ATM",
+  },
+  customerServiceLink: {
+    en: "Asked to click a customer-service link",
+    zh: "要求點擊客服連結",
+  },
+  unrelatedPrivateInfo: {
+    en: "Asked for account passwords or private information unrelated to the transaction",
+    zh: "要求提供帳號密碼或其他與交易無關的私人資訊",
+  },
+} as const;
+
+export type HighRiskKey = keyof typeof HIGH_RISK_REASONS;
+
+export function getHighRiskReasons(answers: SellerAnswers): HighRiskKey[] {
+  return (Object.keys(HIGH_RISK_REASONS) as HighRiskKey[]).filter((key) => answers[key] === true);
+}
 
 export const PROFILE_POINTS_PER_FLAG = 10;
 export const PROFILE_MAX = 40;

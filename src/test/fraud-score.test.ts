@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { scoreProfile, scoreSeller, scoreTotal, shouldRecommendAdvice } from "@/lib/fraud-score";
+import { getHighRiskReasons, scoreProfile, scoreSeller, scoreTotal, shouldRecommendAdvice } from "@/lib/fraud-score";
 
 const base = { friendCount: 200, newAccount: false, fakeIdentity: false, emptyProfile: false };
 const sellerBase = {
@@ -21,6 +21,27 @@ describe("shouldRecommendAdvice", () => {
   });
   it("does not recommend age-based advice when age is unanswered", () => {
     expect(shouldRecommendAdvice(null, 80)).toBe(false);
+  });
+});
+
+describe("high-risk veto", () => {
+  it("online banking or ATM alone triggers high risk even with a zero score", () => {
+    const answers = { ...sellerBase, onlineBankingOrAtm: true };
+    expect(scoreTotal(base, answers)).toBe(0);
+    expect(getHighRiskReasons(answers)).toEqual(["onlineBankingOrAtm"]);
+  });
+  it("a customer-service link alone triggers high risk", () => {
+    expect(getHighRiskReasons({ ...sellerBase, customerServiceLink: true })).toEqual(["customerServiceLink"]);
+  });
+  it("passwords or unrelated private information alone trigger high risk", () => {
+    expect(getHighRiskReasons({ ...sellerBase, unrelatedPrivateInfo: true })).toEqual(["unrelatedPrivateInfo"]);
+  });
+  it("ordinary flags do not trigger the veto", () => {
+    expect(getHighRiskReasons({ ...sellerBase, externalLink: true, lineRedirect: true, bankAccount: true })).toEqual([]);
+  });
+  it("returns every selected veto and clears when deselected", () => {
+    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: true, customerServiceLink: true, unrelatedPrivateInfo: true })).toHaveLength(3);
+    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: false, customerServiceLink: false, unrelatedPrivateInfo: false })).toEqual([]);
   });
 });
 
