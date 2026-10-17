@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { scoreTotal } from "@/lib/fraud-score";
-import { PhotoSearch } from "@/components/photo-search";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -167,7 +166,6 @@ function Index() {
                 </span>
               </label>
             ))}
-            <PhotoSearch />
           </section>
 
           <hr className="border-border" />
