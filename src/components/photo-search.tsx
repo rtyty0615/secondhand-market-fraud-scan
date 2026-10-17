@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, ScanSearch } from "lucide-react";
+import { ExternalLink, ScanSearch, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function PhotoSearch() {
@@ -32,6 +32,29 @@ export function PhotoSearch() {
       </Button>
       {expanded && (
         <div id="photo-search-options" className="mt-3 space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <Button asChild className="h-auto max-w-full whitespace-normal py-3 text-left">
+              <a href="https://www.google.com/?olud" target="_blank" rel="noopener noreferrer">
+                <Upload aria-hidden="true" className="shrink-0" />
+                <span>Upload image to Google Lens<span className="block text-xs">上傳照片至 Google Lens</span></span>
+                <ExternalLink aria-hidden="true" className="shrink-0" />
+              </a>
+            </Button>
+            <Button asChild variant="outline" className="h-auto max-w-full whitespace-normal py-3 text-left">
+              <a href="https://tineye.com/" target="_blank" rel="noopener noreferrer">
+                <Upload aria-hidden="true" className="shrink-0" />
+                <span>Upload to TinEye<span className="block text-xs">上傳至 TinEye</span></span>
+                <ExternalLink aria-hidden="true" className="shrink-0" />
+              </a>
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Choose your photo on the search website; matching pages appear there. Uploads cannot be sent directly from this page.
+            <span className="mt-1 block">請在搜尋網站選擇照片，相同照片的網頁會顯示於該網站。本頁無法直接傳送上傳照片。</span>
+          </p>
+          <details>
+            <summary className="cursor-pointer text-sm text-foreground">Search using a photo URL instead<span className="block text-xs text-muted-foreground">或使用照片網址搜尋</span></summary>
+            <div className="mt-3 space-y-3">
           <label className="block text-sm text-foreground" htmlFor="profile-photo-url">
             Photo URL (optional)
             <span className="block text-muted-foreground">照片網址（選填）</span>
@@ -61,9 +84,11 @@ export function PhotoSearch() {
             ))}
           </div>
           <p id="photo-search-note" className="text-xs text-muted-foreground">
-            Searches open in a new tab. Without a URL, upload the photo on the search website. A supplied URL is shared with the selected service.
-            <span className="mt-1 block">搜尋會在新分頁開啟。沒有網址時，可在搜尋網站上傳照片。輸入的網址會傳送至你選擇的服務。</span>
+            Searches open in a new tab. A supplied URL is shared with the selected service.
+            <span className="mt-1 block">搜尋會在新分頁開啟。輸入的網址會傳送至你選擇的服務。</span>
           </p>
+            </div>
+          </details>
           <p className="text-xs text-muted-foreground">
             Public photos from Instagram, Facebook, Threads, TikTok and other websites may appear if indexed. Private or unindexed photos are not covered. No match does not prove an account is genuine; a match alone does not prove fraud.
             <span className="mt-1 block">Instagram、Facebook、Threads、TikTok 等網站的公開照片若已被收錄，可能出現在結果中；私人或未收錄的照片無法涵蓋。沒有結果不代表帳號真實，找到相同照片也不代表一定是詐騙。</span>
