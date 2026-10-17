@@ -10,5 +10,5 @@
 
 # High-risk veto
 
-- [ ] Add three bilingual veto questions and show high-risk results independently of the additive score.
-- [ ] Test each veto separately and verify high-risk and ordinary results in the questionnaire.
+- [x] Add three bilingual veto questions and show high-risk results independently of the additive score.
+- [x] Test each veto separately and verify high-risk and ordinary results in the questionnaire.
