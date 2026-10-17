@@ -13,7 +13,8 @@ export type SellerAnswers = {
   maiHuoBian: boolean;
   onlineBankingOrAtm?: boolean;
   customerServiceLink?: boolean;
-  unrelatedPrivateInfo?: boolean;
+  accountPasswords?: boolean;
+  privateDocuments?: boolean;
 };
 
 export const HIGH_RISK_REASONS = {
@@ -25,9 +26,13 @@ export const HIGH_RISK_REASONS = {
     en: "Asked to click a customer-service link",
     zh: "要求點擊客服連結",
   },
-  unrelatedPrivateInfo: {
-    en: "Asked for account passwords or private information unrelated to the transaction",
-    zh: "要求提供帳號密碼或其他與交易無關的私人資訊",
+  accountPasswords: {
+    en: "Asked for any account password",
+    zh: "要求提供任何帳號密碼",
+  },
+  privateDocuments: {
+    en: "Asked for any private ID document or personal information",
+    zh: "要求提供任何私人證件及資訊",
   },
 } as const;
 

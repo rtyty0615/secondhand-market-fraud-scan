@@ -88,7 +88,8 @@ const sellerQuestions: { key: SellerKey; label: string; zh: string }[] = [
 const highRiskQuestions: { key: HighRiskKey; label: string; zh: string }[] = [
   { key: "onlineBankingOrAtm", label: "Asks you to operate online banking or an ATM", zh: "要求您操作網銀或 ATM" },
   { key: "customerServiceLink", label: "Asks you to click a customer-service link", zh: "要求您點擊客服連結" },
-  { key: "unrelatedPrivateInfo", label: "Asks for account passwords or private information unrelated to the transaction", zh: "要求提供帳號密碼或其他與交易無關的私人資訊" },
+  { key: "accountPasswords", label: "Asks for any account password", zh: "要求提供任何帳號密碼" },
+  { key: "privateDocuments", label: "Asks for any private ID document or personal information", zh: "要求提供任何私人證件及資訊" },
 ];
 
 function Index() {
@@ -107,7 +108,8 @@ function Index() {
     maiHuoBian: false,
     onlineBankingOrAtm: false,
     customerServiceLink: false,
-    unrelatedPrivateInfo: false,
+    accountPasswords: false,
+    privateDocuments: false,
   });
   const [result, setResult] = useState<number | null>(null);
   const [highRiskReasons, setHighRiskReasons] = useState<HighRiskKey[]>([]);
