@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep reverse-image lookup in a separate frontend PhotoSearch tool that opens third-party search pages; do not imply automatic social-network scanning or change fraud scores based on unverified matches.
