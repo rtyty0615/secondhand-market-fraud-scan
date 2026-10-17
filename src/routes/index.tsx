@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { scoreTotal, shouldRecommendAdvice } from "@/lib/fraud-score";
+import { getHighRiskReasons, HIGH_RISK_REASONS, scoreTotal, shouldRecommendAdvice, type HighRiskKey } from "@/lib/fraud-score";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -30,7 +30,8 @@ type SellerKey =
   | "externalLink"
   | "lineRedirect"
   | "bankAccount"
-  | "maiHuoBian";
+  | "maiHuoBian"
+  | HighRiskKey;
 
 const profileQuestions: {
   key: ProfileKey;
@@ -84,6 +85,12 @@ const sellerQuestions: { key: SellerKey; label: string; zh: string }[] = [
   },
 ];
 
+const highRiskQuestions: { key: HighRiskKey; label: string; zh: string }[] = [
+  { key: "onlineBankingOrAtm", label: "Asks you to operate online banking or an ATM", zh: "要求您操作網銀或 ATM" },
+  { key: "customerServiceLink", label: "Asks you to click a customer-service link", zh: "要求您點擊客服連結" },
+  { key: "unrelatedPrivateInfo", label: "Asks for account passwords or private information unrelated to the transaction", zh: "要求提供帳號密碼或其他與交易無關的私人資訊" },
+];
+
 function Index() {
   const [age, setAge] = useState("");
   const [friends, setFriends] = useState("");
@@ -98,9 +105,19 @@ function Index() {
     lineRedirect: false,
     bankAccount: false,
     maiHuoBian: false,
+    onlineBankingOrAtm: false,
+    customerServiceLink: false,
+    unrelatedPrivateInfo: false,
   });
   const [result, setResult] = useState<number | null>(null);
+  const [highRiskReasons, setHighRiskReasons] = useState<HighRiskKey[]>([]);
   const [recommendAdvice, setRecommendAdvice] = useState(false);
+
+  const clearResult = () => {
+    setResult(null);
+    setHighRiskReasons([]);
+    setRecommendAdvice(false);
+  };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,6 +129,7 @@ function Index() {
         sellerFlags,
     );
     setResult(score);
+    setHighRiskReasons(getHighRiskReasons(sellerFlags));
     setRecommendAdvice(shouldRecommendAdvice(age === "" ? null : Number(age), score));
   };
 
@@ -135,8 +153,7 @@ function Index() {
               value={age}
               onChange={(e) => {
                 setAge(e.target.value);
-                setRecommendAdvice(false);
-                setResult(null);
+                clearResult();
               }}
               className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground"
               placeholder="e.g. 65"
@@ -163,7 +180,7 @@ function Index() {
                 type="number"
                 min={0}
                 value={friends}
-                onChange={(e) => setFriends(e.target.value)}
+                onChange={(e) => { setFriends(e.target.value); clearResult(); }}
                 className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground"
                 placeholder="e.g. 120"
               />
@@ -177,9 +194,10 @@ function Index() {
                 <input
                   type="checkbox"
                   checked={profileFlags[q.key]}
-                  onChange={(e) =>
-                    setProfileFlags({ ...profileFlags, [q.key]: e.target.checked })
-                  }
+                  onChange={(e) => {
+                    setProfileFlags({ ...profileFlags, [q.key]: e.target.checked });
+                    clearResult();
+                  }}
                   className="mt-1 h-4 w-4 accent-primary"
                 />
                 <span className="text-sm text-foreground">
@@ -210,8 +228,34 @@ function Index() {
                 <input
                   type="checkbox"
                   checked={sellerFlags[q.key]}
-                  onChange={(e) => setSellerFlags({ ...sellerFlags, [q.key]: e.target.checked })}
+                  onChange={(e) => { setSellerFlags({ ...sellerFlags, [q.key]: e.target.checked }); clearResult(); }}
                   className="mt-1 h-4 w-4 accent-primary"
+                />
+                <span className="text-sm text-foreground">
+                  {q.label}
+                  <span className="block text-muted-foreground">{q.zh}</span>
+                </span>
+              </label>
+            ))}
+          </section>
+
+          <hr className="border-border" />
+
+          <section className="space-y-4">
+            <h2 className="text-lg font-semibold text-destructive">
+              3. Critical warning signs 一票否決警訊
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Any one of these means high risk, regardless of the score.
+              <span className="block">符合任一項即判定高風險，不受累加分數影響。</span>
+            </p>
+            {highRiskQuestions.map((q) => (
+              <label key={q.key} className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={sellerFlags[q.key]}
+                  onChange={(e) => { setSellerFlags({ ...sellerFlags, [q.key]: e.target.checked }); clearResult(); }}
+                  className="mt-1 h-4 w-4 accent-destructive"
                 />
                 <span className="text-sm text-foreground">
                   {q.label}
@@ -223,7 +267,7 @@ function Index() {
 
           <Button
             type="submit"
-            variant={recommendAdvice ? "destructive" : "default"}
+            variant={recommendAdvice || highRiskReasons.length > 0 ? "destructive" : "default"}
             className="h-auto min-h-9 w-full flex-col whitespace-normal px-4 py-3"
           >
             <span>Check 檢測</span>
@@ -240,6 +284,25 @@ function Index() {
 
         {result !== null && (
           <div className="mt-6 rounded-xl border bg-card p-6 text-center">
+            {highRiskReasons.length > 0 ? (
+              <div role="alert" className="space-y-4">
+                <h2 className="text-3xl font-bold text-destructive">High risk 高風險</h2>
+                <p className="text-sm text-foreground">
+                  A critical warning sign overrides the score. Pause this transaction; do not follow links, operate banking services, or share private information.
+                  <span className="mt-2 block">已觸發一票否決，無論累加分數多少都屬高風險。請暫停交易，勿點擊連結、操作網銀或 ATM，或提供私人資訊。</span>
+                </p>
+                <ul className="space-y-2 text-left text-sm text-destructive">
+                  {highRiskReasons.map((key) => (
+                    <li key={key}>
+                      {HIGH_RISK_REASONS[key].en}
+                      <span className="block">{HIGH_RISK_REASONS[key].zh}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs text-muted-foreground">High risk is not proof of fraud. 高風險不代表已證實詐騙。</p>
+              </div>
+            ) : (
+              <>
             <p className="text-sm text-muted-foreground">Fraud likelihood 詐騙可能性</p>
             <p
               className={`mt-2 text-5xl font-bold ${
@@ -248,6 +311,8 @@ function Index() {
             >
               {result}%
             </p>
+              </>
+            )}
           </div>
         )}
       </div>
