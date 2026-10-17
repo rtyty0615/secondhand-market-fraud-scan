@@ -64,30 +64,18 @@ const sellerQuestions: { key: SellerKey; label: string; zh: string }[] = [
     zh: "無法面交，必須宅配",
   },
   {
-    key: "externalLink",
-    label: "Asks you to go to an external link",
-    zh: "要求你點擊外部連結",
-  },
-  {
-    key: "lineRedirect",
-    label: "Asks you to add them on LINE or redirect you to other customer service",
-    zh: "要求加 LINE 或轉接其他客服",
-  },
-  {
     key: "bankAccount",
     label: "Asks for your bank account",
     zh: "詢問你的銀行帳號",
-  },
-  {
-    key: "maiHuoBian",
-    label: "Asks you to use 賣貨便",
-    zh: "要求使用賣貨便",
   },
 ];
 
 const highRiskQuestions: { key: HighRiskKey; label: string; zh: string }[] = [
   { key: "onlineBankingOrAtm", label: "Asks you to operate online banking or an ATM", zh: "要求您操作網銀或 ATM" },
   { key: "customerServiceLink", label: "Asks you to click a customer-service link", zh: "要求您點擊客服連結" },
+  { key: "externalLink", label: "Asks you to go to an external link", zh: "要求您點擊外部連結" },
+  { key: "lineRedirect", label: "Asks you to add them on LINE or redirect you to other customer service", zh: "要求您加 LINE 或轉接其他客服" },
+  { key: "maiHuoBian", label: "Shares a 賣貨便 link with you", zh: "向您分享賣貨便連結" },
   { key: "accountPasswords", label: "Asks for any account password", zh: "要求提供任何帳號密碼" },
   { key: "privateDocuments", label: "Asks for any private ID document or personal information", zh: "要求提供任何私人證件及資訊" },
 ];
