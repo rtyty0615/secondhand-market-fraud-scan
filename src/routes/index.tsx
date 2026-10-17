@@ -380,16 +380,6 @@ function Index() {
           </div>
         )}
 
-        {result !== null && selectedAdvice.length > 0 && (
-          <section aria-label="建議處理方式與回覆 / Suggested actions and replies" className="mt-6 space-y-4">
-            <h2 className="text-lg font-semibold text-foreground">
-              建議處理方式與回覆
-              <span className="block text-sm font-normal text-muted-foreground">Suggested actions and replies</span>
-            </h2>
-            {selectedAdvice.map((advice) => <QuestionAdviceCard key={advice.key} advice={advice} />)}
-          </section>
-        )}
-
         {recommendAdvice && (
           <div
             role="alert"
