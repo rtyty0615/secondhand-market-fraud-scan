@@ -76,3 +76,43 @@ export function scoreTotal(p: ProfileAnswers, s: SellerAnswers): number {
 export function shouldRecommendAdvice(age: number | null, score: number): boolean {
   return age !== null && Number.isFinite(age) && age > 70 && score > 50;
 }
+
+export type RiskLevel = "green" | "yellow" | "orange" | "red";
+
+export const RISK_LEVELS: Record<RiskLevel, { title: { en: string; zh: string }; message: { en: string; zh: string } }> = {
+  green: {
+    title: { en: "Green light — Low risk", zh: "綠燈 — 低風險" },
+    message: {
+      en: "No warning signs found. This profile looks like a real person. Stay alert as usual and trade through safe channels.",
+      zh: "沒有發現可疑警訊，看起來像真實帳號。請照常保持警覺，並透過安全的交易方式進行。",
+    },
+  },
+  yellow: {
+    title: { en: "Yellow light — Caution", zh: "黃燈 — 留意" },
+    message: {
+      en: "A few caution signs. You may continue, but double-check the item and the person, and avoid risky payment steps.",
+      zh: "出現一些警訊。可以繼續交易，但請再次確認商品與對方身分，避免風險較高的付款方式。",
+    },
+  },
+  orange: {
+    title: { en: "Orange light — High risk", zh: "橘燈 — 高風險" },
+    message: {
+      en: "Many warning signs. We recommend pausing this transaction and verifying the seller before making any payment.",
+      zh: "警訊較多，風險偏高。建議先暫停交易，付款前再次查證對方是否可信。",
+    },
+  },
+  red: {
+    title: { en: "Red light — Very likely a scam", zh: "紅燈 — 非常可能是詐騙" },
+    message: {
+      en: "Do not proceed. Stop this transaction, and do not send money or any personal information.",
+      zh: "請勿繼續交易。請立即停止，不要匯款或提供任何個人資料。",
+    },
+  },
+};
+
+export function getRiskLevel(score: number): RiskLevel {
+  if (score > 70) return "red";
+  if (score >= 30) return "orange";
+  if (score >= 10) return "yellow";
+  return "green";
+}
