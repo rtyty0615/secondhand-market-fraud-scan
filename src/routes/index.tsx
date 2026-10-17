@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { scoreTotal } from "@/lib/fraud-score";
+import { scoreTotal, shouldRecommendAdvice } from "@/lib/fraud-score";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -85,6 +85,7 @@ const sellerQuestions: { key: SellerKey; label: string; zh: string }[] = [
 ];
 
 function Index() {
+  const [age, setAge] = useState("");
   const [friends, setFriends] = useState("");
   const [profileFlags, setProfileFlags] = useState<Record<ProfileKey, boolean>>({
     newAccount: false,
@@ -99,18 +100,19 @@ function Index() {
     maiHuoBian: false,
   });
   const [result, setResult] = useState<number | null>(null);
+  const [recommendAdvice, setRecommendAdvice] = useState(false);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    setResult(
-      scoreTotal(
+    const score = scoreTotal(
         {
           friendCount: friends === "" ? null : Number(friends),
           ...profileFlags,
         },
         sellerFlags,
-      ),
     );
+    setResult(score);
+    setRecommendAdvice(shouldRecommendAdvice(age === "" ? null : Number(age), score));
   };
 
   return (
@@ -122,6 +124,31 @@ function Index() {
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-6 rounded-xl border bg-card p-6 shadow-sm">
+          <label className="block">
+            <span className="text-sm font-medium text-foreground">
+              How old are you? 您的年齡？
+            </span>
+            <input
+              type="number"
+              min={0}
+              step={1}
+              value={age}
+              onChange={(e) => {
+                setAge(e.target.value);
+                setRecommendAdvice(false);
+                setResult(null);
+              }}
+              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground"
+              placeholder="e.g. 65"
+            />
+            <span className="mt-1 block text-xs text-muted-foreground">
+              Your age, not the other person's. Optional.
+              <span className="block">請填寫您自己的年齡，不是交易對象的年齡。可不填。</span>
+            </span>
+          </label>
+
+          <hr className="border-border" />
+
           <section className="space-y-4">
             <h2 className="text-lg font-semibold text-card-foreground">
               1. Facebook Profile 臉書個人檔案
@@ -196,9 +223,18 @@ function Index() {
 
           <Button
             type="submit"
-            className="w-full"
+            variant={recommendAdvice ? "destructive" : "default"}
+            className="h-auto min-h-9 w-full flex-col whitespace-normal px-4 py-3"
           >
-            Check 檢測
+            <span>Check 檢測</span>
+            {recommendAdvice && (
+              <span role="alert" className="mt-2 block text-sm font-medium leading-relaxed">
+                We strongly recommend pausing this transaction and seeking advice from a trusted family member, friend, or someone experienced with online transactions.
+                <span className="mt-1 block">
+                  強烈建議您先暫停交易，向信任的家人、朋友或熟悉網路交易的人諮詢，再決定是否繼續。
+                </span>
+              </span>
+            )}
           </Button>
         </form>
 
