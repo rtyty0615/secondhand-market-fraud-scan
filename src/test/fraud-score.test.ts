@@ -39,12 +39,21 @@ describe("high-risk veto", () => {
   it("any private ID document or personal information alone triggers high risk", () => {
     expect(getHighRiskReasons({ ...sellerBase, privateDocuments: true })).toEqual(["privateDocuments"]);
   });
+  it("an external link alone triggers high risk", () => {
+    expect(getHighRiskReasons({ ...sellerBase, externalLink: true })).toEqual(["externalLink"]);
+  });
+  it("a LINE or customer-service redirect alone triggers high risk", () => {
+    expect(getHighRiskReasons({ ...sellerBase, lineRedirect: true })).toEqual(["lineRedirect"]);
+  });
+  it("a shared 賣貨便 link alone triggers high risk", () => {
+    expect(getHighRiskReasons({ ...sellerBase, maiHuoBian: true })).toEqual(["maiHuoBian"]);
+  });
   it("ordinary flags do not trigger the veto", () => {
-    expect(getHighRiskReasons({ ...sellerBase, externalLink: true, lineRedirect: true, bankAccount: true })).toEqual([]);
+    expect(getHighRiskReasons({ ...sellerBase, cannotMeet: true, bankAccount: true })).toEqual([]);
   });
   it("returns every selected veto and clears when deselected", () => {
-    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: true, customerServiceLink: true, accountPasswords: true, privateDocuments: true })).toHaveLength(4);
-    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: false, customerServiceLink: false, accountPasswords: false, privateDocuments: false })).toEqual([]);
+    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: true, customerServiceLink: true, externalLink: true, lineRedirect: true, maiHuoBian: true, accountPasswords: true, privateDocuments: true })).toHaveLength(7);
+    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: false, customerServiceLink: false, externalLink: false, lineRedirect: false, maiHuoBian: false, accountPasswords: false, privateDocuments: false })).toEqual([]);
   });
 });
 
@@ -59,16 +68,10 @@ describe("scoreSeller", () => {
   it("one flag adds 20", () => expect(scoreSeller({ ...sellerBase, cannotMeet: true })).toBe(20));
   it("two flags add 40", () =>
     expect(scoreSeller({ ...sellerBase, cannotMeet: true, bankAccount: true })).toBe(40));
-  it("all five flags capped at 40", () =>
+  it("external link, LINE redirect and 賣貨便 link are vetoes and add no score", () =>
     expect(
-      scoreSeller({
-        cannotMeet: true,
-        externalLink: true,
-        lineRedirect: true,
-        bankAccount: true,
-        maiHuoBian: true,
-      }),
-    ).toBe(40));
+      scoreSeller({ ...sellerBase, externalLink: true, lineRedirect: true, maiHuoBian: true }),
+    ).toBe(0));
 });
 
 describe("scoreTotal", () => {
@@ -82,10 +85,7 @@ describe("scoreTotal", () => {
         { friendCount: 1, newAccount: true, fakeIdentity: true, emptyProfile: true },
         {
           cannotMeet: true,
-          externalLink: true,
-          lineRedirect: true,
           bankAccount: true,
-          maiHuoBian: true,
         },
       ),
     ).toBe(80));
