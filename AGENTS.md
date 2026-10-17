@@ -9,4 +9,4 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Keep reverse-image lookup in a separate frontend PhotoSearch tool that opens third-party search pages; do not imply automatic social-network scanning or change fraud scores based on unverified matches.
+- Keep questionnaire scoring in the pure fraud-score module, independent of external services, so profile and transaction checks remain deterministic and testable.
