@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getHighRiskReasons, scoreProfile, scoreSeller, scoreTotal, shouldRecommendAdvice } from "@/lib/fraud-score";
+import { getHighRiskReasons, getRiskLevel, RISK_LEVELS, scoreProfile, scoreSeller, scoreTotal, shouldRecommendAdvice, type RiskLevel } from "@/lib/fraud-score";
 
 const base = { friendCount: 200, newAccount: false, fakeIdentity: false, emptyProfile: false };
 const sellerBase = {
@@ -89,4 +89,30 @@ describe("scoreTotal", () => {
         },
       ),
     ).toBe(80));
+});
+
+describe("getRiskLevel", () => {
+  it("below 10% is a green light", () => {
+    expect(getRiskLevel(0)).toBe("green");
+  });
+  it("10% to under 30% is a yellow light", () => {
+    expect(getRiskLevel(10)).toBe("yellow");
+    expect(getRiskLevel(20)).toBe("yellow");
+  });
+  it("30% to 70% is an orange light", () => {
+    expect(getRiskLevel(30)).toBe("orange");
+    expect(getRiskLevel(70)).toBe("orange");
+  });
+  it("above 70% is a red light", () => {
+    expect(getRiskLevel(80)).toBe("red");
+    expect(getRiskLevel(100)).toBe("red");
+  });
+  it("every level has a bilingual title and message", () => {
+    for (const level of Object.keys(RISK_LEVELS) as RiskLevel[]) {
+      expect(RISK_LEVELS[level].title.en).toBeTruthy();
+      expect(RISK_LEVELS[level].title.zh).toBeTruthy();
+      expect(RISK_LEVELS[level].message.en).toBeTruthy();
+      expect(RISK_LEVELS[level].message.zh).toBeTruthy();
+    }
+  });
 });

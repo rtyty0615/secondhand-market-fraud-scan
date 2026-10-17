@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { getHighRiskReasons, HIGH_RISK_REASONS, scoreTotal, shouldRecommendAdvice, type HighRiskKey } from "@/lib/fraud-score";
+import { getHighRiskReasons, HIGH_RISK_REASONS, getRiskLevel, RISK_LEVELS, scoreTotal, shouldRecommendAdvice, type HighRiskKey, type RiskLevel } from "@/lib/fraud-score";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -91,6 +91,20 @@ const highRiskQuestions: { key: HighRiskKey; label: string; zh: string }[] = [
   { key: "accountPasswords", label: "Asks for any account password", zh: "要求提供任何帳號密碼" },
   { key: "privateDocuments", label: "Asks for any private ID document or personal information", zh: "要求提供任何私人證件及資訊" },
 ];
+
+const RISK_LIGHT_ORDER: RiskLevel[] = ["green", "yellow", "orange", "red"];
+const RISK_DOT_ACTIVE: Record<RiskLevel, string> = {
+  green: "bg-risk-green",
+  yellow: "bg-risk-yellow",
+  orange: "bg-risk-orange",
+  red: "bg-risk-red",
+};
+const RISK_TEXT: Record<RiskLevel, string> = {
+  green: "text-risk-green",
+  yellow: "text-risk-yellow",
+  orange: "text-risk-orange",
+  red: "text-risk-red",
+};
 
 function Index() {
   const [age, setAge] = useState("");
@@ -305,14 +319,32 @@ function Index() {
               </div>
             ) : (
               <>
-            <p className="text-sm text-muted-foreground">Fraud likelihood 詐騙可能性</p>
-            <p
-              className={`mt-2 text-5xl font-bold ${
-                result >= 40 ? "text-destructive" : "text-foreground"
-              }`}
-            >
-              {result}%
-            </p>
+                <p className="text-sm text-muted-foreground">Fraud likelihood 詐騙可能性</p>
+                {(() => {
+                  const level = getRiskLevel(result);
+                  return (
+                    <>
+                      <div className="mt-4 flex justify-center gap-2" aria-hidden="true">
+                        {RISK_LIGHT_ORDER.map((l) => (
+                          <span
+                            key={l}
+                            className={`h-4 w-4 rounded-full ${l === level ? RISK_DOT_ACTIVE[l] : "bg-muted"}`}
+                          />
+                        ))}
+                      </div>
+                      <p className={`mt-4 text-5xl font-bold ${RISK_TEXT[level]}`}>{result}%</p>
+                      <h3 className={`mt-3 text-xl font-semibold ${RISK_TEXT[level]}`}>
+                        {RISK_LEVELS[level].title.en}
+                        <span className="block">{RISK_LEVELS[level].title.zh}</span>
+                      </h3>
+                      <p className="mt-2 text-sm text-foreground">
+                        {RISK_LEVELS[level].message.en}
+                        <span className="mt-1 block">{RISK_LEVELS[level].message.zh}</span>
+                      </p>
+                    </>
+                  );
+                })()}
+                <p className="mt-4 text-xs text-muted-foreground">This score is an estimate, not proof of fraud. 此分數僅為估計，不代表已證實詐騙。</p>
               </>
             )}
           </div>
