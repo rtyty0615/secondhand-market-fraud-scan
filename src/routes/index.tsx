@@ -172,7 +172,9 @@ function Index() {
       <div className="mx-auto max-w-xl">
         <h1 className="text-3xl font-bold text-foreground">Can I Trust This Person? 這人可信嗎</h1>
         <p className="mt-2 text-muted-foreground">
-          Check if a Facebook Marketplace buyer might be a fake account. 二手交易詐騙檢測
+          Check if a Facebook Marketplace buyer might be a fake account.
+          <br />
+          二手交易詐騙檢測
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-6 rounded-xl border bg-card p-6 shadow-sm">
