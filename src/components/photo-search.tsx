@@ -34,7 +34,7 @@ export function PhotoSearch() {
         <div id="photo-search-options" className="mt-3 space-y-3">
           <div className="flex flex-wrap gap-2">
             <Button asChild className="h-auto max-w-full whitespace-normal py-3 text-left">
-              <a href="https://lens.google/" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.google.com/?olud" target="_blank" rel="noopener noreferrer">
                 <Upload aria-hidden="true" className="shrink-0" />
                 <span>Upload image to Google Lens<span className="block text-xs">上傳照片至 Google Lens</span></span>
                 <ExternalLink aria-hidden="true" className="shrink-0" />
