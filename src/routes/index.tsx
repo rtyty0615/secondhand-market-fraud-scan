@@ -268,7 +268,7 @@ function Index() {
             </p>
 
             {sellerQuestions.map((q) => (
-              <div key={q.key} className="space-y-3">
+              <div key={q.key} className="space-y-2">
                 <label className="flex items-start gap-3">
                   <input
                     type="checkbox"
@@ -281,7 +281,9 @@ function Index() {
                     <span className="block text-muted-foreground">{q.zh}</span>
                   </span>
                 </label>
-
+                {showAdvice && adviceByKey.get(q.key) && (
+                  <QuestionAdviceCard advice={adviceByKey.get(q.key)!} />
+                )}
               </div>
             ))}
           </section>
@@ -297,18 +299,23 @@ function Index() {
               <span className="block">符合任一項即判定高風險，不受累加分數影響。</span>
             </p>
             {highRiskQuestions.map((q) => (
-              <label key={q.key} className="flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  checked={sellerFlags[q.key]}
-                  onChange={(e) => { setSellerFlags({ ...sellerFlags, [q.key]: e.target.checked }); clearResult(); }}
-                  className="mt-1 h-4 w-4 accent-destructive"
-                />
-                <span className="text-sm text-foreground">
-                  {q.label}
-                  <span className="block text-muted-foreground">{q.zh}</span>
-                </span>
-              </label>
+              <div key={q.key} className="space-y-2">
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={sellerFlags[q.key]}
+                    onChange={(e) => { setSellerFlags({ ...sellerFlags, [q.key]: e.target.checked }); clearResult(); }}
+                    className="mt-1 h-4 w-4 accent-destructive"
+                  />
+                  <span className="text-sm text-foreground">
+                    {q.label}
+                    <span className="block text-muted-foreground">{q.zh}</span>
+                  </span>
+                </label>
+                {showAdvice && adviceByKey.get(q.key) && (
+                  <QuestionAdviceCard advice={adviceByKey.get(q.key)!} />
+                )}
+              </div>
             ))}
           </section>
 
