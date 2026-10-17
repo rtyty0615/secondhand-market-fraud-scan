@@ -88,7 +88,8 @@ const sellerQuestions: { key: SellerKey; label: string; zh: string }[] = [
 const highRiskQuestions: { key: HighRiskKey; label: string; zh: string }[] = [
   { key: "onlineBankingOrAtm", label: "Asks you to operate online banking or an ATM", zh: "要求您操作網銀或 ATM" },
   { key: "customerServiceLink", label: "Asks you to click a customer-service link", zh: "要求您點擊客服連結" },
-  { key: "unrelatedPrivateInfo", label: "Asks for account passwords or private information unrelated to the transaction", zh: "要求提供帳號密碼或其他與交易無關的私人資訊" },
+  { key: "accountPasswords", label: "Asks for any account password", zh: "要求提供任何帳號密碼" },
+  { key: "privateDocuments", label: "Asks for any private ID document or personal information", zh: "要求提供任何私人證件及資訊" },
 ];
 
 function Index() {
@@ -107,7 +108,8 @@ function Index() {
     maiHuoBian: false,
     onlineBankingOrAtm: false,
     customerServiceLink: false,
-    unrelatedPrivateInfo: false,
+    accountPasswords: false,
+    privateDocuments: false,
   });
   const [result, setResult] = useState<number | null>(null);
   const [highRiskReasons, setHighRiskReasons] = useState<HighRiskKey[]>([]);
@@ -286,7 +288,7 @@ function Index() {
           <div className="mt-6 rounded-xl border bg-card p-6 text-center">
             {highRiskReasons.length > 0 ? (
               <div role="alert" className="space-y-4">
-                <h2 className="text-3xl font-bold text-destructive">High risk 高風險</h2>
+                <h2 className="text-3xl font-bold text-destructive">Stop transaction 暫停交易</h2>
                 <p className="text-sm text-foreground">
                   A critical warning sign overrides the score. Pause this transaction; do not follow links, operate banking services, or share private information.
                   <span className="mt-2 block">已觸發一票否決，無論累加分數多少都屬高風險。請暫停交易，勿點擊連結、操作網銀或 ATM，或提供私人資訊。</span>

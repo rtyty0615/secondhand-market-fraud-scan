@@ -11,13 +11,13 @@ const sellerBase = {
 };
 
 describe("shouldRecommendAdvice", () => {
-  it("requires the user's age to be strictly greater than 60", () => {
-    expect(shouldRecommendAdvice(60, 60)).toBe(false);
-    expect(shouldRecommendAdvice(61, 60)).toBe(true);
+  it("requires the user's age to be strictly greater than 70", () => {
+    expect(shouldRecommendAdvice(70, 60)).toBe(false);
+    expect(shouldRecommendAdvice(71, 60)).toBe(true);
   });
   it("requires the score to be strictly greater than 50", () => {
-    expect(shouldRecommendAdvice(61, 50)).toBe(false);
-    expect(shouldRecommendAdvice(61, 51)).toBe(true);
+    expect(shouldRecommendAdvice(71, 50)).toBe(false);
+    expect(shouldRecommendAdvice(71, 51)).toBe(true);
   });
   it("does not recommend age-based advice when age is unanswered", () => {
     expect(shouldRecommendAdvice(null, 80)).toBe(false);
@@ -33,15 +33,18 @@ describe("high-risk veto", () => {
   it("a customer-service link alone triggers high risk", () => {
     expect(getHighRiskReasons({ ...sellerBase, customerServiceLink: true })).toEqual(["customerServiceLink"]);
   });
-  it("passwords or unrelated private information alone trigger high risk", () => {
-    expect(getHighRiskReasons({ ...sellerBase, unrelatedPrivateInfo: true })).toEqual(["unrelatedPrivateInfo"]);
+  it("any account password alone triggers high risk", () => {
+    expect(getHighRiskReasons({ ...sellerBase, accountPasswords: true })).toEqual(["accountPasswords"]);
+  });
+  it("any private ID document or personal information alone triggers high risk", () => {
+    expect(getHighRiskReasons({ ...sellerBase, privateDocuments: true })).toEqual(["privateDocuments"]);
   });
   it("ordinary flags do not trigger the veto", () => {
     expect(getHighRiskReasons({ ...sellerBase, externalLink: true, lineRedirect: true, bankAccount: true })).toEqual([]);
   });
   it("returns every selected veto and clears when deselected", () => {
-    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: true, customerServiceLink: true, unrelatedPrivateInfo: true })).toHaveLength(3);
-    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: false, customerServiceLink: false, unrelatedPrivateInfo: false })).toEqual([]);
+    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: true, customerServiceLink: true, accountPasswords: true, privateDocuments: true })).toHaveLength(4);
+    expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: false, customerServiceLink: false, accountPasswords: false, privateDocuments: false })).toEqual([]);
   });
 });
 
