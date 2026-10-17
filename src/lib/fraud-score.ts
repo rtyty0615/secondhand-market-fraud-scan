@@ -91,8 +91,13 @@ export function scoreTotal(p: ProfileAnswers, s: SellerAnswers): number {
   return Math.min(100, scoreProfile(p) + scoreSeller(s));
 }
 
-export function shouldRecommendAdvice(age: number | null, score: number): boolean {
-  return age !== null && Number.isFinite(age) && age > 70 && score > 50;
+export function shouldRecommendAdvice(
+  age: number | null,
+  score: number,
+  hasHighRisk = false,
+): boolean {
+  if (age === null || !Number.isFinite(age) || age <= 70) return false;
+  return score >= 30 || hasHighRisk;
 }
 
 export type RiskLevel = "green" | "yellow" | "orange" | "red";
