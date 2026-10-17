@@ -42,3 +42,8 @@
 
 - [x] Reword the yellow band so it says 若要繼續交易，請多留意 instead of 可以繼續交易.
 - [x] Verify the new bilingual message renders in the preview and tests still pass.
+
+# Seller scoring weights
+
+- [x] Raise each seller choice from 20% to 30% and the section cap from 40% to 70%.
+- [x] Verify one choice shows 30%, three choices cap at 70%, and the section wording matches.
