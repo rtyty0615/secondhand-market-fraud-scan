@@ -43,3 +43,7 @@ export function scoreSeller(a: SellerAnswers): number {
 export function scoreTotal(p: ProfileAnswers, s: SellerAnswers): number {
   return Math.min(100, scoreProfile(p) + scoreSeller(s));
 }
+
+export function shouldRecommendAdvice(age: number | null, score: number): boolean {
+  return age !== null && Number.isFinite(age) && age > 60 && score > 50;
+}

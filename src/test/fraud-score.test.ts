@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { scoreProfile, scoreSeller, scoreTotal } from "@/lib/fraud-score";
+import { scoreProfile, scoreSeller, scoreTotal, shouldRecommendAdvice } from "@/lib/fraud-score";
 
 const base = { friendCount: 200, newAccount: false, fakeIdentity: false, emptyProfile: false };
 const sellerBase = {
@@ -9,6 +9,20 @@ const sellerBase = {
   bankAccount: false,
   maiHuoBian: false,
 };
+
+describe("shouldRecommendAdvice", () => {
+  it("requires the user's age to be strictly greater than 60", () => {
+    expect(shouldRecommendAdvice(60, 60)).toBe(false);
+    expect(shouldRecommendAdvice(61, 60)).toBe(true);
+  });
+  it("requires the score to be strictly greater than 50", () => {
+    expect(shouldRecommendAdvice(61, 50)).toBe(false);
+    expect(shouldRecommendAdvice(61, 51)).toBe(true);
+  });
+  it("does not recommend age-based advice when age is unanswered", () => {
+    expect(shouldRecommendAdvice(null, 80)).toBe(false);
+  });
+});
 
 describe("scoreProfile", () => {
   it("fewer than 10 friends adds 10", () => expect(scoreProfile({ ...base, friendCount: 9 })).toBe(10));
