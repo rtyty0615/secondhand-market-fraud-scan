@@ -166,9 +166,12 @@ function Index() {
         },
         sellerFlags,
     );
+    const reasons = getHighRiskReasons(sellerFlags);
     setResult(score);
-    setHighRiskReasons(getHighRiskReasons(sellerFlags));
-    setRecommendAdvice(shouldRecommendAdvice(age === "" ? null : Number(age), score));
+    setHighRiskReasons(reasons);
+    setRecommendAdvice(
+      shouldRecommendAdvice(age === "" ? null : Number(age), score, reasons.length > 0),
+    );
   };
 
   const copyMessage = async () => {
@@ -341,14 +344,6 @@ function Index() {
             className="h-auto min-h-9 w-full flex-col whitespace-normal px-4 py-3"
           >
             <span>Check 檢測</span>
-            {recommendAdvice && (
-              <span role="alert" className="mt-2 block text-sm font-medium leading-relaxed">
-                We strongly recommend pausing this transaction and seeking advice from a trusted family member, friend, or someone experienced with online transactions.
-                <span className="mt-1 block">
-                  強烈建議您先暫停交易，向信任的家人、朋友或熟悉網路交易的人諮詢，再決定是否繼續。
-                </span>
-              </span>
-            )}
           </Button>
         </form>
 
@@ -401,6 +396,20 @@ function Index() {
                 <p className="mt-4 text-xs text-muted-foreground">This score is an estimate, not proof of fraud. 此分數僅為估計，不代表已證實詐騙。</p>
               </>
             )}
+          </div>
+        )}
+
+        {recommendAdvice && (
+          <div
+            role="alert"
+            className="mt-6 rounded-xl border border-destructive/50 bg-destructive/5 p-5"
+          >
+            <p className="text-sm font-medium leading-relaxed text-destructive">
+              We strongly recommend pausing this transaction and seeking advice from a trusted family member, friend, or someone experienced with online transactions.
+              <span className="mt-1 block">
+                強烈建議您先暫停交易，向信任的家人、朋友或熟悉網路交易的人諮詢，再決定是否繼續。
+              </span>
+            </p>
           </div>
         )}
       </div>
