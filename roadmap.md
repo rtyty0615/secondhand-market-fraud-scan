@@ -17,3 +17,8 @@
 
 - [x] Replace the single "account passwords or unrelated private information" veto with two separate options: any account password, and any private ID document or personal information.
 - [x] Test each new veto separately and verify both appear in the questionnaire.
+
+# Private-location meetup advice
+
+- [x] Add 「提出在私人場合面交」 below 「無法面交」 in Seller Behaviour with a copyable message asking to meet at a public place.
+- [x] Test that the option adds 20%, stays capped at 40%, is not a veto, and keeps the exact Chinese message.

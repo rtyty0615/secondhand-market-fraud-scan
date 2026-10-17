@@ -1,9 +1,20 @@
 import { describe, it, expect } from "vitest";
-import { getHighRiskReasons, getRiskLevel, RISK_LEVELS, scoreProfile, scoreSeller, scoreTotal, shouldRecommendAdvice, type RiskLevel } from "@/lib/fraud-score";
+import {
+  getHighRiskReasons,
+  getRiskLevel,
+  MEETUP_ADVICE,
+  RISK_LEVELS,
+  scoreProfile,
+  scoreSeller,
+  scoreTotal,
+  shouldRecommendAdvice,
+  type RiskLevel,
+} from "@/lib/fraud-score";
 
 const base = { friendCount: 200, newAccount: false, fakeIdentity: false, emptyProfile: false };
 const sellerBase = {
   cannotMeet: false,
+  privateLocationMeetup: false,
   externalLink: false,
   lineRedirect: false,
   bankAccount: false,
@@ -51,6 +62,9 @@ describe("high-risk veto", () => {
   it("ordinary flags do not trigger the veto", () => {
     expect(getHighRiskReasons({ ...sellerBase, cannotMeet: true, bankAccount: true })).toEqual([]);
   });
+  it("a private-location meetup is advice, not a veto", () => {
+    expect(getHighRiskReasons({ ...sellerBase, privateLocationMeetup: true })).toEqual([]);
+  });
   it("returns every selected veto and clears when deselected", () => {
     expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: true, customerServiceLink: true, externalLink: true, lineRedirect: true, maiHuoBian: true, accountPasswords: true, privateDocuments: true })).toHaveLength(7);
     expect(getHighRiskReasons({ ...sellerBase, onlineBankingOrAtm: false, customerServiceLink: false, externalLink: false, lineRedirect: false, maiHuoBian: false, accountPasswords: false, privateDocuments: false })).toEqual([]);
@@ -72,12 +86,40 @@ describe("scoreSeller", () => {
     expect(
       scoreSeller({ ...sellerBase, externalLink: true, lineRedirect: true, maiHuoBian: true }),
     ).toBe(0));
+  it("a private-location meetup adds 20", () =>
+    expect(scoreSeller({ ...sellerBase, privateLocationMeetup: true })).toBe(20));
+  it("all three seller flags stay capped at 40", () =>
+    expect(
+      scoreSeller({
+        ...sellerBase,
+        cannotMeet: true,
+        privateLocationMeetup: true,
+        bankAccount: true,
+      }),
+    ).toBe(40));
+});
+
+describe("MEETUP_ADVICE", () => {
+  it("keeps the exact message to send the other person", () => {
+    expect(MEETUP_ADVICE.message.zh).toBe(
+      "不好意思，我希望能夠到超商或捷運站等等人多的地方進行交易",
+    );
+  });
+  it("explains the advice in English too", () => {
+    expect(MEETUP_ADVICE.message.en).toContain("convenience store");
+    expect(MEETUP_ADVICE.lead.en).toBeTruthy();
+    expect(MEETUP_ADVICE.lead.zh).toBeTruthy();
+  });
 });
 
 describe("scoreTotal", () => {
   it("combines both sections", () =>
     expect(
       scoreTotal({ ...base, friendCount: 5 }, { ...sellerBase, cannotMeet: true }),
+    ).toBe(30));
+  it("counts a private-location meetup in the total", () =>
+    expect(
+      scoreTotal({ ...base, friendCount: 5 }, { ...sellerBase, privateLocationMeetup: true }),
     ).toBe(30));
   it("caps at 100", () =>
     expect(
