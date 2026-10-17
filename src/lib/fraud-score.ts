@@ -5,7 +5,19 @@ export type ProfileAnswers = {
   emptyProfile: boolean;
 };
 
-export const POINTS_PER_FLAG = 5;
+export type SellerAnswers = {
+  cannotMeet: boolean;
+  externalLink: boolean;
+  lineRedirect: boolean;
+  bankAccount: boolean;
+  maiHuoBian: boolean;
+};
+
+export const PROFILE_POINTS_PER_FLAG = 10;
+export const PROFILE_MAX = 40;
+
+export const SELLER_POINTS_PER_FLAG = 20;
+export const SELLER_MAX = 40;
 
 export function scoreProfile(a: ProfileAnswers): number {
   const flags = [
@@ -14,5 +26,20 @@ export function scoreProfile(a: ProfileAnswers): number {
     a.nonLocalName,
     a.emptyProfile,
   ];
-  return Math.min(100, flags.filter(Boolean).length * POINTS_PER_FLAG);
+  return Math.min(PROFILE_MAX, flags.filter(Boolean).length * PROFILE_POINTS_PER_FLAG);
+}
+
+export function scoreSeller(a: SellerAnswers): number {
+  const flags = [
+    a.cannotMeet,
+    a.externalLink,
+    a.lineRedirect,
+    a.bankAccount,
+    a.maiHuoBian,
+  ];
+  return Math.min(SELLER_MAX, flags.filter(Boolean).length * SELLER_POINTS_PER_FLAG);
+}
+
+export function scoreTotal(p: ProfileAnswers, s: SellerAnswers): number {
+  return Math.min(100, scoreProfile(p) + scoreSeller(s));
 }
