@@ -1,7 +1,7 @@
 export type ProfileAnswers = {
   friendCount: number | null;
   newAccount: boolean;
-  nonLocalName: boolean;
+  fakeIdentity: boolean;
   emptyProfile: boolean;
 };
 
@@ -23,7 +23,7 @@ export function scoreProfile(a: ProfileAnswers): number {
   const flags = [
     a.friendCount !== null && a.friendCount < 10,
     a.newAccount,
-    a.nonLocalName,
+    a.fakeIdentity,
     a.emptyProfile,
   ];
   return Math.min(PROFILE_MAX, flags.filter(Boolean).length * PROFILE_POINTS_PER_FLAG);
