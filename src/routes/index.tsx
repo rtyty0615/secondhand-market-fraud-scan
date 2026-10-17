@@ -17,13 +17,13 @@ import { getSelectedAdvice, type QuestionAdvice } from "@/lib/question-advice";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FB Market Fraud Checker | 二手交易詐騙檢測" },
+      { title: "Can I Trust This Person? 這人可信嗎 | 二手交易詐騙檢測" },
       {
         name: "description",
         content:
           "Answer a few questions to estimate if a Facebook Marketplace buyer may be a fake account.",
       },
-      { property: "og:title", content: "FB Market Fraud Checker" },
+      { property: "og:title", content: "Can I Trust This Person? 這人可信嗎" },
       {
         property: "og:description",
         content: "Estimate the fraud risk of a Facebook buyer in Taiwan.",
@@ -170,9 +170,9 @@ function Index() {
   return (
     <main className="min-h-screen bg-background px-4 py-12">
       <div className="mx-auto max-w-xl">
-        <h1 className="text-3xl font-bold text-foreground">二手交易詐騙檢測</h1>
+        <h1 className="text-3xl font-bold text-foreground">Can I Trust This Person? 這人可信嗎</h1>
         <p className="mt-2 text-muted-foreground">
-          Check if a Facebook Marketplace buyer might be a fake account.
+          Check if a Facebook Marketplace buyer might be a fake account. 二手交易詐騙檢測
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-6 rounded-xl border bg-card p-6 shadow-sm">
