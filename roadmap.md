@@ -27,3 +27,8 @@
 
 - [x] For users over 70, show the red advice message at the bottom of the page whenever the score is 30% or higher, or any critical warning sign is selected.
 - [x] Test the exact 30% boundary, the veto-only case with a zero score, and that the age-70 boundary still stays silent.
+
+# Advice for every selected item
+
+- [x] Add bilingual handling advice and copyable replies for all profile, seller and critical-warning items after Check.
+- [x] Verify complete coverage, selection changes, copying and unchanged scoring (49 tests; all 14 cards and bilingual clipboard contents checked in the page).

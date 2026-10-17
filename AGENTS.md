@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep questionnaire scoring in the pure fraud-score module, independent of external services, so profile and transaction checks remain deterministic and testable.
+- Keep selected-item advice in a separate presentation-data module and render it through a reusable copyable card after submission, so reply content never changes scoring and every selection has the same interaction.
