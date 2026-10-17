@@ -23,25 +23,39 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const profileQuestions = [
+type ProfileKey = "newAccount" | "fakeIdentity" | "emptyProfile";
+type SellerKey =
+  | "cannotMeet"
+  | "externalLink"
+  | "lineRedirect"
+  | "bankAccount"
+  | "maiHuoBian";
+
+const profileQuestions: {
+  key: ProfileKey;
+  label: string;
+  zh: string;
+  hint?: string;
+}[] = [
   {
     key: "newAccount",
     label: "Account was created within the last month",
     zh: "帳號建立未滿一個月",
   },
   {
-    key: "nonLocalName",
-    label: "Profile name is not a local Taiwanese name",
-    zh: "名稱不像台灣本地人",
+    key: "fakeIdentity",
+    label: "Profile name or photo doesn't look like a real person",
+    zh: "名稱或照片不像真人",
+    hint: "e.g. random letters, a stock or model photo, or a photo that doesn't match the name",
   },
   {
     key: "emptyProfile",
     label: "Profile content is empty",
     zh: "個人檔案內容空白",
   },
-] as const;
+];
 
-const sellerQuestions = [
+const sellerQuestions: { key: SellerKey; label: string; zh: string }[] = [
   {
     key: "cannotMeet",
     label: "Cannot meet in person, must deliver",
@@ -67,16 +81,13 @@ const sellerQuestions = [
     label: "Asks you to use 賣貨便",
     zh: "要求使用賣貨便",
   },
-] as const;
-
-type ProfileKey = (typeof profileQuestions)[number]["key"];
-type SellerKey = (typeof sellerQuestions)[number]["key"];
+];
 
 function Index() {
   const [friends, setFriends] = useState("");
   const [profileFlags, setProfileFlags] = useState<Record<ProfileKey, boolean>>({
     newAccount: false,
-    nonLocalName: false,
+    fakeIdentity: false,
     emptyProfile: false,
   });
   const [sellerFlags, setSellerFlags] = useState<Record<SellerKey, boolean>>({
@@ -146,6 +157,11 @@ function Index() {
                 <span className="text-sm text-foreground">
                   {q.label}
                   <span className="block text-muted-foreground">{q.zh}</span>
+                  {q.hint && (
+                    <span className="mt-1 block text-xs italic text-muted-foreground">
+                      {q.hint}
+                    </span>
+                  )}
                 </span>
               </label>
             ))}

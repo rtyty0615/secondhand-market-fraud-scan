@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { scoreProfile, scoreSeller, scoreTotal } from "@/lib/fraud-score";
 
-const base = { friendCount: 200, newAccount: false, nonLocalName: false, emptyProfile: false };
+const base = { friendCount: 200, newAccount: false, fakeIdentity: false, emptyProfile: false };
 const sellerBase = {
   cannotMeet: false,
   externalLink: false,
@@ -14,7 +14,7 @@ describe("scoreProfile", () => {
   it("fewer than 10 friends adds 10", () => expect(scoreProfile({ ...base, friendCount: 9 })).toBe(10));
   it("10 friends adds nothing", () => expect(scoreProfile({ ...base, friendCount: 10 })).toBe(0));
   it("all four flags = 40", () =>
-    expect(scoreProfile({ friendCount: 3, newAccount: true, nonLocalName: true, emptyProfile: true })).toBe(40));
+    expect(scoreProfile({ friendCount: 3, newAccount: true, fakeIdentity: true, emptyProfile: true })).toBe(40));
 });
 
 describe("scoreSeller", () => {
@@ -41,7 +41,7 @@ describe("scoreTotal", () => {
   it("caps at 100", () =>
     expect(
       scoreTotal(
-        { friendCount: 1, newAccount: true, nonLocalName: true, emptyProfile: true },
+        { friendCount: 1, newAccount: true, fakeIdentity: true, emptyProfile: true },
         {
           cannotMeet: true,
           externalLink: true,
