@@ -85,16 +85,16 @@ describe("scoreProfile", () => {
 });
 
 describe("scoreSeller", () => {
-  it("one flag adds 20", () => expect(scoreSeller({ ...sellerBase, cannotMeet: true })).toBe(20));
-  it("two flags add 40", () =>
-    expect(scoreSeller({ ...sellerBase, cannotMeet: true, bankAccount: true })).toBe(40));
+  it("one flag adds 30", () => expect(scoreSeller({ ...sellerBase, cannotMeet: true })).toBe(30));
+  it("two flags add 60", () =>
+    expect(scoreSeller({ ...sellerBase, cannotMeet: true, bankAccount: true })).toBe(60));
   it("external link, LINE redirect and 賣貨便 link are vetoes and add no score", () =>
     expect(
       scoreSeller({ ...sellerBase, externalLink: true, lineRedirect: true, maiHuoBian: true }),
     ).toBe(0));
-  it("a private-location meetup adds 20", () =>
-    expect(scoreSeller({ ...sellerBase, privateLocationMeetup: true })).toBe(20));
-  it("all three seller flags stay capped at 40", () =>
+  it("a private-location meetup adds 30", () =>
+    expect(scoreSeller({ ...sellerBase, privateLocationMeetup: true })).toBe(30));
+  it("all three seller flags stay capped at 70", () =>
     expect(
       scoreSeller({
         ...sellerBase,
@@ -102,7 +102,7 @@ describe("scoreSeller", () => {
         privateLocationMeetup: true,
         bankAccount: true,
       }),
-    ).toBe(40));
+    ).toBe(70));
 });
 
 describe("MEETUP_ADVICE", () => {
@@ -122,18 +122,18 @@ describe("scoreTotal", () => {
   it("combines both sections", () =>
     expect(
       scoreTotal({ ...base, friendCount: 5 }, { ...sellerBase, cannotMeet: true }),
-    ).toBe(30));
+    ).toBe(40));
   it("counts a private-location meetup in the total", () =>
     expect(
       scoreTotal({ ...base, friendCount: 5 }, { ...sellerBase, privateLocationMeetup: true }),
-    ).toBe(30));
+    ).toBe(40));
   it("caps at 100", () =>
     expect(
       scoreTotal(
         { friendCount: 1, newAccount: true, fakeIdentity: true, emptyProfile: true },
-        { ...sellerBase, cannotMeet: true, bankAccount: true },
+        { ...sellerBase, cannotMeet: true, privateLocationMeetup: true, bankAccount: true },
       ),
-    ).toBe(80));
+    ).toBe(100));
 });
 
 describe("getRiskLevel", () => {

@@ -264,7 +264,7 @@ function Index() {
               2. Seller Behaviour 賣家行為
             </h2>
             <p className="text-xs text-muted-foreground">
-              每項 20%，最高 40% · Each choice adds 20%, capped at 40%
+              每項 30%，最高 70% · Each choice adds 30%, capped at 70%
             </p>
 
             {sellerQuestions.map((q) => (

@@ -58,8 +58,8 @@ export function getHighRiskReasons(answers: SellerAnswers): HighRiskKey[] {
 export const PROFILE_POINTS_PER_FLAG = 10;
 export const PROFILE_MAX = 40;
 
-export const SELLER_POINTS_PER_FLAG = 20;
-export const SELLER_MAX = 40;
+export const SELLER_POINTS_PER_FLAG = 30;
+export const SELLER_MAX = 70;
 
 export const MEETUP_ADVICE = {
   lead: {
