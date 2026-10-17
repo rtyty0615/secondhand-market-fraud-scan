@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { scoreTotal } from "@/lib/fraud-score";
+import { PhotoSearch } from "@/components/photo-search";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -165,6 +167,7 @@ function Index() {
                 </span>
               </label>
             ))}
+            <PhotoSearch />
           </section>
 
           <hr className="border-border" />
@@ -193,12 +196,12 @@ function Index() {
             ))}
           </section>
 
-          <button
+          <Button
             type="submit"
-            className="w-full rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground hover:bg-primary/90"
+            className="w-full"
           >
             Check 檢測
-          </button>
+          </Button>
         </form>
 
         {result !== null && (
