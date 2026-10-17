@@ -38,7 +38,8 @@ export function PhotoSearch() {
           </label>
           <input
             id="profile-photo-url"
-            type="url"
+            type="text"
+            inputMode="url"
             value={photoUrl}
             onChange={(event) => setPhotoUrl(event.target.value)}
             placeholder="https://…"
