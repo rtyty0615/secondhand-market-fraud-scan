@@ -37,3 +37,8 @@
 
 - [x] Show each card's handling-advice warning line in red (both languages) so it reads as a warning.
 - [x] Verify the warning renders red while the copyable reply keeps normal colors.
+
+# Yellow-light wording
+
+- [x] Reword the yellow band so it says 若要繼續交易，請多留意 instead of 可以繼續交易.
+- [x] Verify the new bilingual message renders in the preview and tests still pass.
