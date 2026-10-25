@@ -1,44 +1,80 @@
-# Secondhand Market Fraud Scan
+# Can I Trust This Person? 這人可信嗎
 
-In taiwan, if you want to sell second hand item there’s a possibility that you may encounter fraud from fake account in facebook market group. 
+**二手交易詐騙檢測** — a bilingual (English / 繁體中文) checklist that helps people in Taiwan spot fake accounts and scams when buying or selling secondhand items on Facebook Marketplace and buy/sell groups.
 
-The overall idea is that we let the user to answer a few question and submit and then return a percentage of how many this could be fraud account. 
+**Live app:** https://secondhand-market-fraud-scan.lovable.app
 
-Create a simple website that have the following input:
+---
 
-First section about facebook profile:
+## How it works
 
-How many friends. (if less than 10, its yes)
+Answer a short checklist about the other person's profile and behaviour, press **Check 檢測**, and get:
 
-The account is established within 1 month.
+- a **fraud risk percentage** with a traffic-light rating,
+- an instant **Stop transaction 暫停交易** warning when a critical sign is present,
+- **handling advice and a ready-to-send reply** (copy with one tap) under every item you ticked.
 
-Profile name is not local taiwanese
+Nothing is uploaded or stored — all scoring runs in the browser.
 
-The profile content is empty.
+## Questions & scoring
 
-Above if each yes add 5 percent to overall score.
+| Section | Items | Weight |
+|---|---|---|
+| **0. Your age 您的年齡** (optional) | Age of the person using the site | Used only for extra safety advice |
+| **1. Facebook Profile 臉書個人檔案** | Fewer than 10 friends · Account created within 1 month · Name or photo doesn't look like a real person · Profile is empty | 10% each, max 40% |
+| **2. Seller Behaviour 賣家行為** | Cannot meet in person, must deliver · Proposes meeting at a private location · Asks for your bank account | 30% each, max 70% |
+| **3. Critical warning signs 一票否決警訊** | Online banking / ATM instructions · Customer-service link · External link · Add LINE / transfer to other support · Shares a 賣貨便 link · Asks for any account password · Asks for private ID documents or information | Any one → **Stop transaction 暫停交易** |
 
-i will add more pls build above
+The total score is capped at 100%.
 
-This project was built with [Lovable](https://lovable.dev).
+### Risk lights
 
-**Live app**: https://secondhand-market-fraud-scan.lovable.app
+| Score | Light | Meaning |
+|---|---|---|
+| < 10% | 🟢 Green | Looks normal |
+| 10–29% | 🟡 Yellow | Some caution signs — stay alert if you continue |
+| 30–70% | 🟠 Orange | High risk |
+| > 70% | 🔴 Red | Very likely a scam |
 
-## Build with Lovable
+### Extra care for seniors
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/4a23ec4c-ac41-4d13-9918-82d7c8959567).
+If the user is **over 70** and the score is **30% or more**, or any critical warning sign is ticked, a red message recommends talking with family or someone they trust before continuing.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+### Wording principles
 
-## Development
+- Every question is shown in English and 繁體中文.
+- Identity questions ask whether a profile looks like a **real person** — never whether a name sounds foreign or non-Taiwanese.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## Tech stack
+
+- [TanStack Start](https://tanstack.com/start) v1 + React 19
+- Vite 7, Tailwind CSS v4
+- Vitest for unit tests
+
+Key files:
+
+- `src/lib/fraud-score.ts` — pure scoring, risk bands, veto rules
+- `src/lib/question-advice.ts` — advice and reply text per item
+- `src/components/question-advice-card.tsx` — copyable advice card
+- `src/routes/index.tsx` — the checklist page
+
+## Run locally
+
+Requires Node.js 18+ (or Bun).
 
 ```sh
 git clone <this-repository-url>
 cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+Run tests:
+
+```sh
+npx vitest run
+```
+
+## Contributing
+
+Built with [Lovable](https://lovable.dev/projects/4a23ec4c-ac41-4d13-9918-82d7c8959567). Changes pushed to `main` sync back into the Lovable editor automatically.
